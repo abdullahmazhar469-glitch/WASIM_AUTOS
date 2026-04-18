@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASIM AUTOS - Tax Invoice</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background: #e8e8e8; padding: 30px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .invoice { max-width: 1000px; width: 100%; background: white; margin: 0 auto; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .invoice-inner { padding: 40px 35px; }
+        .header-left { text-align: left; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 25px; }
+        .header-left h1 { font-size: 32px; color: #1a1a2e; letter-spacing: 2px; margin-bottom: 5px; }
+        .header-left p { font-size: 12px; color: #666; margin: 3px 0; }
+        .title-right { text-align: right; margin: -85px 0 20px 0; }
+        .title-right h2 { font-size: 28px; color: #333; text-transform: uppercase; letter-spacing: 3px; }
+        .title-right .invoice-no { font-size: 14px; color: #666; margin-top: 5px; }
+        .info-row { display: flex; justify-content: space-between; margin: 25px 0; padding: 15px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+        .info-box { flex: 1; }
+        .info-box .label { font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        .info-box .value { font-size: 14px; color: #333; font-weight: bold; }
+        .items-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
+        .items-table th { background: #f5f5f5; padding: 12px 10px; text-align: left; font-size: 12px; font-weight: bold; color: #333; border-bottom: 2px solid #ddd; }
+        .items-table td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 13px; color: #333; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .amount-section { margin: 25px 0; display: flex; justify-content: flex-end; }
+        .amount-box { width: 300px; }
+        .amount-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; }
+        .amount-row.total { margin-top: 10px; padding-top: 10px; border-top: 2px solid #333; font-size: 16px; }
+        .amount-row.total .value { color: #c0392b; font-size: 18px; }
+        .payment-status { margin: 20px 0; padding: 12px; text-align: center; border-radius: 5px; }
+        .payment-status.paid { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .payment-status.partial { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .payment-status.pending { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 11px; color: #888; }
+        .print-section { text-align: center; margin-top: 20px; }
+        .print-btn { background: #1a1a2e; color: white; border: none; padding: 10px 30px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        @media print { body { background: white; padding: 0; } .print-section { display: none; } .invoice { box-shadow: none; } }
+    </style>
+</head>
+<body>
+    <div class="invoice"><div class="invoice-inner"><div class="header-left"><h1>WASIM AUTOS</h1><p>Auto Spare Parts - Rahim Yar Khan</p><p>Shop #12, Al-Makkah Plaza, Model Town, Rahim Yar Khan</p><p>Phone: +92 328 3042403 | Email: info@wasimautos.com</p></div>
+    <div class="title-right"><h2>TAX INVOICE</h2><div class="invoice-no">Invoice No: WASIM-{{ sale.id|stringformat:"05d" }}</div></div>
+    <div class="info-row"><div class="info-box"><div class="label">BILL TO:</div><div class="value">{% if sale.shop_name %}{{ sale.shop_name }}{% else %}Walk-in Customer{% endif %}</div></div>
+    <div class="info-box"><div class="label">INVOICE DETAILS:</div><div class="value" id="invoiceDate">Date: Loading...</div><div class="address" id="invoiceTime">Time: Loading...</div></div>
+    <div class="info-box"><div class="label">PAYMENT INFO:</div><div class="value">{% if balance == 0 %}Paid{% elif sale.received_amount > 0 %}Partial Payment{% else %}Pending{% endif %}</div></div></div>
+    <table class="items-table"><thead><tr><th>DESCRIPTION</th><th class="text-center">QTY</th><th class="text-right">UNIT PRICE</th><th class="text-right">TOTAL</th></tr></thead><tbody><tr><td class="product-cell">{{ sale.product.name }}<div style="font-size:11px; color:#888;">Part #: {{ sale.product.part_number|default:"WAP-"|add:sale.product.id }}</div></div><td class="text-center">{{ sale.quantity }}</div><td class="text-right">Rs. {{ sale.price|floatformat:2 }}</div><td class="text-right">Rs. {{ total|floatformat:2 }}</div></tr></tbody></table>
+    <div class="amount-section"><div class="amount-box"><div class="amount-row"><span>Subtotal:</span><span>Rs. {{ total|floatformat:2 }}</span></div><div class="amount-row"><span>Discount:</span><span>Rs. 0.00</span></div><div class="amount-row"><span>Shipping:</span><span>Rs. 0.00</span></div>{% if sale.received_amount > 0 and sale.received_amount != total %}<div class="amount-row"><span>Amount Received:</span><span>Rs. {{ sale.received_amount|floatformat:2 }}</span></div><div class="amount-row"><span>Balance Due:</span><span>Rs. {{ balance|floatformat:2 }}</span></div>{% endif %}<div class="amount-row total"><span>GRAND TOTAL:</span><span>Rs. {{ total|floatformat:2 }}</span></div></div></div>
+    <div class="payment-status {% if balance == 0 %}paid{% elif sale.received_amount > 0 %}partial{% else %}pending{% endif %}"><div class="status-text">{% if balance == 0 %}✓ PAYMENT COMPLETED{% elif sale.received_amount > 0 %}⚠ PARTIAL PAYMENT{% else %}⚠ PAYMENT PENDING{% endif %}</div></div>
+    <div class="footer"><p>Thank you for choosing WASIM AUTOS!</p><p>This is a computer-generated invoice. No signature required.</p></div></div></div>
+    <div class="print-section"><button class="print-btn" onclick="window.print()">🖨️ PRINT INVOICE / SAVE AS PDF</button></div>
+    <script>
+        function updateDateTime(){ var n=new Date(); document.getElementById('invoiceDate').innerHTML='Date: '+n.toLocaleDateString('en-PK',{year:'numeric',month:'long',day:'numeric'}); document.getElementById('invoiceTime').innerHTML='Time: '+n.toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',hour12:true}); }
+        updateDateTime(); setInterval(updateDateTime,1000); window.onbeforeprint=function(){ updateDateTime(); };
+    </script>
+</body>
+</html>

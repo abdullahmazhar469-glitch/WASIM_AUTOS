@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart - WASIM AUTOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0b0f;
+            --surface: #12141a;
+            --border: #252836;
+            --accent: #f0c040;
+            --accent3: #3ae0a0;
+            --accent2: #e05c3a;
+            --text: #e8eaf0;
+            --muted: #6b7080;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+        }
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent) 0%, #d4a520 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 22px;
+            color: #0a0b0f;
+        }
+        .logo-text {
+            font-weight: 800;
+            font-size: 24px;
+        }
+        .logo-text span { color: var(--accent); }
+        .cart-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .cart-header h2 {
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 12px;
+            color: var(--muted);
+            font-size: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .product-image {
+            width: 60px;
+            height: 60px;
+            background: var(--bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quantity-input {
+            width: 60px;
+            padding: 6px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            text-align: center;
+        }
+        .btn-update, .btn-remove {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .btn-remove { color: var(--accent2); }
+        .cart-summary {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            text-align: right;
+        }
+        .total-amount {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .btn-checkout {
+            background: var(--accent);
+            color: #0a0b0f;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        .btn-continue {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 60px;
+        }
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr { display: block; }
+            th { display: none; }
+            td { display: flex; justify-content: space-between; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="{% url 'home' %}" class="logo-box">
+                <div class="logo-icon">WA</div>
+                <div><div class="logo-text">WASIM <span>AUTOS</span></div></div>
+            </a>
+            <a href="{% url 'home' %}" style="color: var(--accent); text-decoration: none;">Continue Shopping</a>
+        </header>
+
+        <div class="cart-container">
+            <div class="cart-header">
+                <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+                {% if cart_items %}<span>{{ cart_items|length }} item(s)</span>{% endif %}
+            </div>
+
+            {% if cart_items %}
+            <div style="overflow-x: auto;">
+                <form method="post" action="{% url 'update_cart' 0 %}" id="cart-form">
+                    <table>
+                        <thead>
+                            <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            {% if item.product.image %}<img src="{{ item.product.image.url }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">{% else %}<i class="fas fa-car" style="font-size: 24px; color: var(--muted);"></i>{% endif %}
+                                        </div>
+                                        <div>
+                                            <strong>{{ item.product.name }}</strong><br>
+                                            <small style="color: var(--muted);">SKU: {{ item.product.part_number|default:"N/A" }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Rs. {{ item.product.price|floatformat:2 }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'update_cart' item.id %}" style="display: flex; gap: 5px;">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="quantity-input">
+                                        <button type="submit" class="btn-update"><i class="fas fa-sync-alt"></i></button>
+                                    </form>
+                                </td>
+                                <td>Rs. {{ item.total_price|floatformat:2 }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-remove"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+            <div class="cart-summary">
+                <p>Subtotal: <strong class="total-amount">Rs. {{ total_amount|floatformat:2 }}</strong></p>
+                <p style="font-size: 12px; color: var(--muted); margin-top: 10px;">Shipping calculated at checkout</p>
+                <a href="{% url 'checkout' %}" class="btn-checkout">Proceed to Checkout →</a>
+            </div>
+            {% else %}
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart" style="font-size: 64px; color: var(--muted); margin-bottom: 20px; display: block;"></i>
+                <h3>Your cart is empty</h3>
+                <p style="color: var(--muted); margin: 15px 0;">Looks like you haven't added any items yet.</p>
+                <a href="{% url 'home' %}" class="btn-continue">Continue Shopping</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

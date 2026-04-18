@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASIM AUTOS — Premium Auto Spare Parts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg: #0a0b0f; 
+            --surface: #12141a; 
+            --border: #252836; 
+            --accent: #f0c040; 
+            --accent3: #3ae0a0;
+            --accent2: #e05c3a;
+            --text: #e8eaf0; 
+            --muted: #6b7080; 
+            --glow: rgba(240, 192, 64, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; padding: 20px; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.15; z-index: -1; pointer-events: none; }
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* Header */
+        header { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border); margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+        .logo-box { display: flex; align-items: center; gap: 15px; }
+        .logo-icon { width: 50px; height: 50px; background: linear-gradient(135deg, var(--accent) 0%, #d4a520 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px; color: #0a0b0f; box-shadow: 0 0 20px var(--glow); }
+        .logo-text { font-weight: 800; font-size: 24px; letter-spacing: -0.5px; }
+        .logo-text span { color: var(--accent); }
+        .tagline { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+        .header-right { display: flex; align-items: center; gap: 25px; }
+        .cart-icon { position: relative; cursor: pointer; text-decoration: none; color: var(--text); transition: all 0.3s; }
+        .cart-icon:hover { color: var(--accent); }
+        .cart-icon i { font-size: 24px; }
+        .cart-count { position: absolute; top: -10px; right: -12px; background: var(--accent2); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 50%; min-width: 18px; text-align: center; }
+        .live-time { font-size: 12px; color: var(--muted); font-family: monospace; }
+        .store-status { font-size: 10px; color: var(--accent3); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .store-status::before { content: ''; width: 8px; height: 8px; background: var(--accent3); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+        .user-menu { display: flex; align-items: center; gap: 15px; }
+        .user-menu a { color: var(--text); text-decoration: none; font-size: 13px; transition: all 0.3s; }
+        .user-menu a:hover { color: var(--accent); }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, rgba(18,20,26,0.95) 0%, rgba(10,11,15,0.95) 100%), url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=1632&auto=format&fit=crop'); background-size: cover; background-position: center; padding: 80px 50px; border-radius: 28px; margin-bottom: 60px; text-align: center; border: 1px solid var(--border); }
+        .hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 15px; background: linear-gradient(135deg, #fff 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 span { background: none; -webkit-text-fill-color: var(--accent); }
+        .hero p { font-size: 16px; color: var(--muted); max-width: 600px; margin: 0 auto; }
+
+        /* Filter Bar */
+        .filter-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
+        .search-box { flex: 2; display: flex; gap: 10px; }
+        .search-box input { flex: 1; padding: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; }
+        .search-box button, .filter-box select, .filter-box a { padding: 12px 20px; background: var(--accent); color: #0a0b0f; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+        .filter-box { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .filter-box select { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+        .barcode-input { display: flex; gap: 10px; }
+        .barcode-input input { padding: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; width: 150px; }
+
+        /* Products Grid */
+        .section-title { font-size: 28px; font-weight: 800; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 30px; background: var(--accent); border-radius: 2px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 60px; }
+
+        /* Product Card */
+        .product-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; transition: all 0.4s; position: relative; display: flex; flex-direction: column; }
+        .product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), transparent); transform: scaleX(0); transition: transform 0.4s; }
+        .product-card:hover::before { transform: scaleX(1); }
+        .product-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--accent); }
+        .image-container { width: 100%; height: 220px; border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #1a1c24 0%, #0f1117 100%); margin-bottom: 20px; }
+        .product-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .product-card:hover img { transform: scale(1.08); }
+        .stock-badge { position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 30px; font-size: 10px; font-weight: 700; z-index: 10; backdrop-filter: blur(10px); }
+        .in-stock { background: rgba(58,224,160,0.15); color: var(--accent3); border: 1px solid var(--accent3); }
+        .low-stock { background: rgba(240,192,64,0.15); color: var(--accent); border: 1px solid var(--accent); }
+        .out-of-stock { background: rgba(224,92,58,0.15); color: var(--accent2); border: 1px solid var(--accent2); }
+        .product-sku { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-bottom: 8px; display: inline-block; background: rgba(107,112,128,0.1); padding: 2px 8px; border-radius: 4px; }
+        .product-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; text-decoration: none; color: var(--text); display: block; }
+        .product-name:hover { color: var(--accent); }
+        .product-description { font-size: 12px; color: var(--muted); margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .rating { margin-bottom: 10px; }
+        .rating i { color: #ffc107; font-size: 12px; }
+        .price-container { margin-top: auto; margin-bottom: 15px; }
+        .price-tag { font-size: 28px; font-weight: 800; color: var(--accent); }
+        .price-unit { font-size: 12px; color: var(--muted); }
+        .btn-detail { display: block; width: 100%; padding: 12px; background: transparent; color: var(--accent); border: 2px solid var(--accent); text-align: center; text-decoration: none; border-radius: 12px; font-weight: 700; transition: all 0.3s; margin-bottom: 10px; }
+        .btn-detail:hover { background: var(--accent); color: #0a0b0f; transform: translateY(-2px); }
+        .btn-add-to-cart { display: block; width: 100%; padding: 12px; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; border: none; text-align: center; border-radius: 12px; font-weight: 700; transition: all 0.3s; cursor: pointer; }
+        .btn-add-to-cart:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37,211,102,0.3); }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: var(--surface); border: 1px solid var(--accent3); color: var(--accent3); padding: 12px 24px; border-radius: 8px; display: none; z-index: 1000; }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--border); padding: 40px 0 30px; margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+        .footer-col h4 { color: var(--accent); margin-bottom: 15px; }
+        .footer-col p { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+        .footer-col i { width: 25px; color: var(--accent); }
+        .copyright { text-align: center; padding-top: 20px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); margin-top: 20px; }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 32px; } .filter-bar { flex-direction: column; } .search-box { width: 100%; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-box">
+            <div class="logo-icon">WA</div>
+            <div><div class="logo-text">WASIM <span>AUTOS</span></div><div class="tagline">PREMIUM AUTO SPARE PARTS</div></div>
+        </div>
+        <div class="header-right">
+            <div class="live-time" id="liveTime"></div>
+            <div class="store-status">STORE OPEN</div>
+            <a href="{% url 'cart' %}" class="cart-icon"><i class="fas fa-shopping-cart"></i>{% if cart_count > 0 %}<span class="cart-count">{{ cart_count }}</span>{% endif %}</a>
+            <div class="user-menu">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}"><i class="fas fa-user"></i> {{ user.username }}</a>
+                    <a href="{% url 'user_logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                {% else %}
+                    <a href="{% url 'user_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>High-Performance <span>Auto Parts</span></h1>
+        <p>Upgrade your ride with authentic, laboratory-tested components and guaranteed reliability.</p>
+    </section>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <form method="get" class="search-box">
+            <input type="text" name="search" placeholder="Search products by name, SKU, barcode..." value="{{ search_query }}">
+            <button type="submit"><i class="fas fa-search"></i> Search</button>
+        </form>
+        <div class="filter-box">
+            <select name="category" onchange="this.form.submit()" form="filterForm">
+                <option value="">All Categories</option>
+                {% for category in categories %}<option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>{% endfor %}
+            </select>
+            <select name="sort" onchange="this.form.submit()" form="filterForm">
+                <option value="-id" {% if sort_by == '-id' %}selected{% endif %}>Latest</option>
+                <option value="price" {% if sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
+                <option value="-price" {% if sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
+                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name: A to Z</option>
+            </select>
+            <select name="stock" onchange="this.form.submit()" form="filterForm">
+                <option value="">All Stock</option>
+                <option value="in_stock" {% if stock_filter == 'in_stock' %}selected{% endif %}>In Stock</option>
+                <option value="low_stock" {% if stock_filter == 'low_stock' %}selected{% endif %}>Low Stock</option>
+                <option value="out_of_stock" {% if stock_filter == 'out_of_stock' %}selected{% endif %}>Out of Stock</option>
+            </select>
+            <div class="barcode-input">
+                <input type="text" id="barcodeInput" placeholder="Scan Barcode">
+                <button onclick="searchByBarcode()"><i class="fas fa-qrcode"></i> Scan</button>
+            </div>
+            <form method="get" id="filterForm" style="display:none;"></form>
+        </div>
+    </div>
+
+    <div class="section-title">Featured Products</div>
+    <div class="grid">
+        {% for product in products %}
+        <div class="product-card">
+            {% if product.stock > 10 %}<span class="stock-badge in-stock">✓ IN STOCK</span>
+            {% elif product.stock > 0 %}<span class="stock-badge low-stock">⚠ LOW STOCK</span>
+            {% else %}<span class="stock-badge out-of-stock">✗ OUT OF STOCK</span>{% endif %}
+
+            <div class="image-container">
+                {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); flex-direction: column;"><i class="fas fa-car" style="font-size: 40px;"></i><span>No Image</span></div>{% endif %}
+            </div>
+            
+            <span class="product-sku">SKU: {{ product.part_number|default:"WAP-001" }}</span>
+            <a href="{% url 'product_detail' product.id %}" class="product-name">{{ product.name }}</a>
+            <div class="rating">{% for i in "12345" %}{% if forloop.counter <= product.average_rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}{% endfor %} <span style="color:var(--muted);">({{ product.reviews.count }})</span></div>
+            {% if product.description %}<p class="product-description">{{ product.description|truncatechars:80 }}</p>{% endif %}
+            
+            <div class="price-container"><span class="price-tag">Rs. {{ product.price|floatformat:2 }}</span><span class="price-unit">PKR</span></div>
+
+            <a href="{% url 'product_detail' product.id %}" class="btn-detail"><i class="fas fa-eye"></i> View Details</a>
+            
+            {% if product.stock > 0 %}
+            <form method="post" action="{% url 'add_to_cart' product.id %}" class="add-to-cart-form">{% csrf_token %}<input type="hidden" name="quantity" value="1"><button type="submit" class="btn-add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button></form>
+            {% else %}<button class="btn-add-to-cart" style="background: var(--border); cursor: not-allowed;" disabled><i class="fas fa-ban"></i> Out of Stock</button>{% endif %}
+        </div>
+        {% empty %}<div style="text-align: center; padding: 60px; color: var(--muted); grid-column: 1/-1;"><i class="fas fa-box-open" style="font-size: 50px; margin-bottom: 15px;"></i><p>No products found.</p></div>{% endfor %}
+    </div>
+
+    <footer>
+        <div class="footer-col"><h4>WASIM AUTOS</h4><p><i class="fas fa-map-marker-alt"></i> Rahim Yar Khan, Pakistan</p><p><i class="fas fa-phone"></i> +92 328 3042403</p><p><i class="fas fa-envelope"></i> info@wasimautos.com</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><p><i class="fas fa-chevron-right"></i> About Us</p><p><i class="fas fa-chevron-right"></i> Shipping Policy</p><p><i class="fas fa-chevron-right"></i> Returns & Warranty</p></div>
+        <div class="footer-col"><h4>Working Hours</h4><p><i class="fas fa-clock"></i> Mon - Sat: 9AM - 9PM</p><p><i class="fas fa-clock"></i> Sunday: 11AM - 6PM</p></div>
+        <div class="footer-col"><h4>Payment Methods</h4><p><i class="fas fa-credit-card"></i> Cash on Delivery</p><p><i class="fab fa-easypaisa"></i> EasyPaisa / JazzCash</p><p><i class="fas fa-university"></i> Bank Transfer</p></div>
+    </footer>
+    <div class="copyright"><p>&copy; 2025 WASIM AUTOS — All Rights Reserved.</p></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+    function updateClock() { document.getElementById('liveTime').textContent = new Date().toLocaleString('en-PK', { weekday:'short', day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit', hour12:true }).toUpperCase(); }
+    setInterval(updateClock, 1000); updateClock();
+
+    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            fetch(this.action, { method: 'POST', body: new FormData(this), headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message);
+                    let cartCount = document.querySelector('.cart-count');
+                    if (cartCount) cartCount.textContent = data.cart_count;
+                    else if (data.cart_count > 0) { let cartIcon = document.querySelector('.cart-icon'); let span = document.createElement('span'); span.className = 'cart-count'; span.textContent = data.cart_count; cartIcon.appendChild(span); }
+                }
+            });
+        });
+    });
+
+    function searchByBarcode() {
+        let barcode = document.getElementById('barcodeInput').value;
+        if (barcode) {
+            fetch(`/search-barcode/?barcode=${barcode}`).then(r => r.json()).then(data => {
+                if (data.success) window.location.href = `/product/${data.product_id}/`;
+                else showToast('Product not found!');
+            });
+        }
+    }
+    function showToast(msg) { let toast = document.getElementById('toast'); toast.textContent = msg; toast.style.display = 'block'; setTimeout(() => toast.style.display = 'none', 3000); }
+</script>
+</body>
+</html>

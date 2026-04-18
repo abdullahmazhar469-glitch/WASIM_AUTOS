@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order - {{ product.name }} | WASIM AUTOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0b0f;
+            --surface: #12141a;
+            --border: #252836;
+            --accent: #f0c040;
+            --text: #e8eaf0;
+            --muted: #6b7080;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent) 0%, #d4a520 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 22px;
+            color: #0a0b0f;
+        }
+        .order-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        .product-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+        .product-image {
+            width: 150px;
+            height: 150px;
+            background: var(--bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: #0a0b0f;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .price {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .error {
+            background: rgba(224,92,58,0.15);
+            border: 1px solid #e05c3a;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="{% url 'home' %}" class="logo-box">
+                <div class="logo-icon">WA</div>
+                <div><div class="logo-text">WASIM <span>AUTOS</span></div></div>
+            </a>
+        </header>
+
+        <div class="order-container">
+            <h2 style="margin-bottom: 20px;">Order Details</h2>
+            
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <div class="product-info">
+                <div class="product-image">
+                    {% if product.image %}<img src="{{ product.image.url }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">{% else %}<i class="fas fa-car" style="font-size: 48px; color: var(--muted);"></i>{% endif %}
+                </div>
+                <div>
+                    <h3>{{ product.name }}</h3>
+                    <p style="color: var(--muted); margin: 10px 0;">{{ product.description|truncatechars:100 }}</p>
+                    <div class="price">Rs. {{ product.price|floatformat:2 }}</div>
+                    <p style="font-size: 12px; margin-top: 10px;">In Stock: {{ product.stock }}</p>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" name="name" required value="{{ user.customer.name|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" name="phone" required value="{{ user.customer.phone|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label>Delivery Address *</label>
+                    <textarea name="address" rows="3" required>{{ user.customer.address|default:'' }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Quantity *</label>
+                    <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select name="payment_method">
+                        <option value="COD">Cash on Delivery</option>
+                        <option value="JazzCash">JazzCash</option>
+                        <option value="EasyPaisa">EasyPaisa</option>
+                        <option value="Bank">Bank Transfer</option>
+                    </select>
+                </div>
+                <button type="submit">Place Order</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
