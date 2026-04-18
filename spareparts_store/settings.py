@@ -3,13 +3,19 @@ Django settings for spareparts_store project.
 """
 
 from pathlib import Path
+import dj_database_url
 import os
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-6wb01kd@a0j3^$2kt^0(t4u$@87j8xv-f5@-sr_m)x@ojgvauf'
-DEBUG = True
-ALLOWED_HOSTS = []
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-sami')
+DEBUG = False
+ALLOWED_HOSTS = [
+    'wasim-autos.onrender.com',  # Render ka URL
+    'localhost',                  # Local testing ke liye
+    '127.0.0.1',                 # Local testing ke liye
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,6 +36,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'spareparts_store.urls'
@@ -52,10 +59,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'spareparts_store.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -71,6 +78,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -82,6 +91,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing,
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'your_email@gmail.com'
 # EMAIL_HOST_PASSWORD = 'your_password'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://wasim-autos.onrender.com',
+    'https://*.onrender.com',
+]
 
 LOGIN_URL = 'admin_login'
 LOGIN_REDIRECT_URL = 'admin_dashboard'
